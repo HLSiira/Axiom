@@ -110,14 +110,20 @@
 			var input = oX('#dialog input[type="file"]').element,
 				files = [];
 
-			if (e.dataTransfer.items) {
-				[...e.dataTransfer.items].forEach((item, i) => {
-					if (item.kind === 'file') {
-						files.push(item.getAsFile());
-					}
-				});
-			} else {
-				files = [...e.dataTransfer.files];
+			if (e.dataTransfer) {
+				// Handle drag-and-drop files
+				if (e.dataTransfer.items) {
+					[...e.dataTransfer.items].forEach((item) => {
+						if (item.kind === 'file') {
+							files.push(item.getAsFile());
+						}
+					});
+				} else {
+					files = [...e.dataTransfer.files];
+				}
+			} else if (e.target && e.target.files) {
+				// Handle file input files
+				files = [...e.target.files];
 			}
 
 			let fileCount = files.length;
